@@ -368,7 +368,7 @@ export default function SimpleStudentManager() {
 }
 
 // Helper component for uniform inputs
-function Input({ label, name, type = "text", className = "", placeholder = "" }) {
+function Input({ label, name, type = "text", className = "", placeholder = "" }: { label: string; name: string; type?: string; className?: string; placeholder?: string }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-semibold text-gray-600">{label}</label>

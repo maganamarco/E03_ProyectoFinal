@@ -7,7 +7,7 @@ export async function PUT(request, { params }) {
     try {
         await connectMongoDB();
 
-        // unwrap params (params can be a Promise)
+        // Id selection
         const { id } = await params;
 
         // safely parse JSON body

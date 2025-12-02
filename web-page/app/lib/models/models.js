@@ -2,7 +2,6 @@ import mongoose, { Schema } from "mongoose";
 
 const studentSchema = new Schema(
     {
-        // do not declare _id here; let Mongoose manage it
         school: String,
         sex: String,
         age: Number,
@@ -42,7 +41,6 @@ const studentSchema = new Schema(
     }
 );
 
-// Use a single stable model name and guard against recompilation
 const Student = mongoose.models.Student || mongoose.model("Student", studentSchema);
 
 export default Student;

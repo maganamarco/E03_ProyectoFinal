@@ -1,0 +1,62 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // {
+    //   "name": "Next.js: debug server-side",
+    //   "type": "node-terminal",
+    //   "request": "launch",
+    //   "command": "npm run dev -- ./web-page --inspect"
+    // },
+    {
+      "type": "node",
+    "request": "launch",
+    "name": "Debug NPM Script with CWD",
+    "command": "npm run dev -- ./web-page --inspect"
+    // "runtimeExecutable": "npm",
+    // "runtimeArgs": [
+    //     "run",
+    //     "dev",
+    //     // The double-dash separates arguments for NPM from arguments for your script
+    //     "--",
+    //     "--inpect"
+    // ],
+    // 💡 The fix: Set the Current Working Directory
+    "cwd": "${workspaceFolder}/web-page", 
+    "console": "integratedTerminal"
+    },
+    {
+      "name": "Next.js: debug client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000"
+    },
+    {
+      "name": "Next.js: debug client-side (Firefox)",
+      "type": "firefox",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "reAttach": true,
+      "pathMappings": [
+        {
+          "url": "webpack://_N_E",
+          "path": "${workspaceFolder}/web-page"
+        }
+      ]
+    },
+    {
+      "name": "Next.js: debug full stack",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/web-page/node_modules/next/dist/bin/next",
+      "runtimeArgs": ["--inspect"],
+      "skipFiles": ["<node_internals>/**"],
+      "serverReadyAction": {
+        "action": "debugWithEdge",
+        "killOnServerStop": true,
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}/web-page"
+      }
+    }
+  ]
+}

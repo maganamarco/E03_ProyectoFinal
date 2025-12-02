@@ -4,11 +4,37 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
     try {
-        const { title, description } = await request.json();
+        const body = await request.json();
         await connectMongoDB();
-        await Student.create({ title, description });
-        return NextResponse.json({ message: "Student Created" }, { status: 201 });
+
+        // Derive allowed fields from the Mongoose schema (exclude _id and __v)
+        const schemaFields = Object.keys(Student.schema.paths).filter(
+            (p) => !["_id", "__v"].includes(p)
+        );
+
+        // Build document only with fields present in the schema
+        const data = {};
+        for (const key of schemaFields) {
+            if (body[key] !== undefined) data[key] = body[key];
+        }
+
+        // Check for required fields defined in the schema
+        const requiredFields = schemaFields.filter((k) => {
+            const path = Student.schema.paths[k];
+            return Boolean(path?.options?.required || path?.isRequired);
+        });
+        const missing = requiredFields.filter((k) => data[k] === undefined);
+        if (missing.length) {
+            return NextResponse.json(
+                { error: `Missing required fields: ${missing.join(", ")}` },
+                { status: 400 }
+            );
+        }
+
+        const createdStudent = await Student.create(data);
+        return NextResponse.json({ student: createdStudent }, { status: 201 });
     } catch (error) {
+        console.error("Error creating student:", error);
         return NextResponse.json({ error: "Failed to create student" }, { status: 500 });
     }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectMongoDB from "@/app/lib/mongodbConnection";
 import Student from "@/app/lib/models/models";
+import { ObjectId } from "mongodb";
 
 export async function PUT(request, { params }) {
     try {
@@ -35,3 +36,15 @@ export async function PUT(request, { params }) {
     }
 }
 
+export async function DELETE(request, { params }) {
+    try {
+        const id = await params;
+        const oID = new ObjectId(id)
+        await connectMongoDB();
+        await Student.findByIdAndDelete(oID);
+        return NextResponse.json({ message: "Student deleted" }, { status: 200 });
+    } catch (error) {
+        console.error("Error deleting student:", error);
+        return NextResponse.json({ error: "Failed to delete student" }, { status: 500 });
+    }
+}

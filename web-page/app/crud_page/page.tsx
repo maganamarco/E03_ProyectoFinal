@@ -185,8 +185,28 @@ export default function SimpleStudentManager() {
     }
   }
 
-  async function onDelete() {
-    
+  async function onDelete(student?: any) {
+    if (!student) return;
+    const ok = confirm(`Delete student ${String(student._id ?? student.id ?? '')}? This cannot be undone.`);
+    if (!ok) return;
+
+    try {
+      const id = encodeURIComponent(student._id ?? student.id ?? '');
+      const res = await fetch(`/api/students/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (res.ok) {
+        // remove from local state without refetching
+        setStudents((prev) => prev.filter(s => String(s._id ?? s.id) !== String(student._id ?? student.id)));
+      } else {
+        const body = await res.json().catch(() => null);
+        console.error('Failed to delete student', body);
+      }
+    } catch (err) {
+      console.error('Network error while deleting student', err);
+    }
   }
 
   return (
@@ -331,7 +351,7 @@ export default function SimpleStudentManager() {
                   </td>
                   <td className="p-3 text-right">
                     <button onClick={() => onUpdate(s)} className="text-gray-500 hover:text-blue-600 mr-3"><Edit2 size={16} /></button>
-                    <button className="text-gray-500 hover:text-red-600"><Trash2 size={16} /></button>
+                    <button onClick={() => onDelete(s)} className="text-gray-500 hover:text-red-600"><Trash2 size={16} /></button>
                   </td>
                 </tr>
               ))}

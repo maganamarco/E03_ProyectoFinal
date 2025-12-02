@@ -1,17 +1,18 @@
 {
   "version": "0.2.0",
   "configurations": [
-    // {
-    //   "name": "Next.js: debug server-side",
-    //   "type": "node-terminal",
-    //   "request": "launch",
-    //   "command": "npm run dev -- ./web-page --inspect"
-    // },
+    {
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev -- --inspect",
+      "cwd": "${workspaceFolder}/web-page",
+    },
     {
       "type": "node",
     "request": "launch",
     "name": "Debug NPM Script with CWD",
-    "command": "npm run dev -- ./web-page --inspect"
+    "command": "npm run dev -- ./web-page --inspect",
     // "runtimeExecutable": "npm",
     // "runtimeArgs": [
     //     "run",
